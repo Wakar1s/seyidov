@@ -1,0 +1,63 @@
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&display=swap');
+
+:root {
+    --base-text-color: #333;
+    --base-text-2d-color: #666;
+    --base-main-color: #4D19CC;
+    --base-main-color--hover: #2A1468;
+}
+
+html, body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    background: #BBB;
+    font-family: 'Noto Sans', sans-serif;
+}
+#ipad {
+  background-color: #FFF;
+  margin: 0 auto;
+  min-height: 100%;
+  padding: 30px 0;
+  max-width: 834px;
+}
+a {
+  color: var(--base-main-color);
+  transition: color .15s ease-in;
+}
+a:hover {
+  color: var(--base-main-color--hover);
+}
+a:focus {
+  color: var(--base-main-color--hover);
+  outline: 2px dashed var(--base-main-color--hover);
+}
+
+.adaptive {
+  position: relative;
+  
+}
+.adaptive--16x9 {
+  overflow: hidden;
+  padding-top: 56.25%;
+}
+.adaptive__img {
+  height: auto;
+  vertical-align: top;
+  width: 100%;
+}
+.adaptive--16x9 .adaptive__img {
+  left: 0;
+  position: absolute;
+  top: 0;
+}
+
+img {
+  color: var(--base-text-2d-color);
+  font-family: 'Noto Sans', sans-serif;
+  font-size: 16px;
+  text-align: center;
+}

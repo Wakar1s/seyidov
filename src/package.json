@@ -1,0 +1,15 @@
+{
+  "scripts": {
+    "migrate": "./node_modules/.bin/prisma migrate dev"
+  },
+  "devDependencies": {
+    "@types/node": "^20.8.5",
+    "prisma": "^5.4.2",
+    "ts-node": "^10.9.1",
+    "typescript": "^5.2.2"
+  },
+  "dependencies": {
+    "@nestjs/cli": "^10.1.18",
+    "@prisma/client": "5.4.2"
+  }
+}

@@ -1,0 +1,67 @@
+version: '3.9'
+networks:
+  app:
+    driver: 'bridge'
+
+services:
+  postgresql:
+    container_name: postgresql_db
+    image: postgres:latest
+    env_file:
+      - config.env
+    ports:
+      - "5432:5432"
+    networks:
+      - app
+    volumes:
+      - ./docker/shared/postgresql/data:/var/lib/postgresql/data:z
+    user: 1000:1000
+  gateway-nginx:
+    container_name: gateway-nginx
+    build:
+      context: docker/services
+      dockerfile: nginx/Dockerfile
+    ports:
+      - "8080:8080"
+      - "8081:8081"
+    volumes:
+      - ./docker/shared/nginx/log:/var/log/nginx
+    networks:
+      - app
+    depends_on:
+      - node-backend
+      - node-frontend
+  node-backend:
+    build:
+      context: docker/services/node
+    volumes:
+      - ./src/backend:/app
+      - ./config.env:/app/.env
+    networks:
+      - app
+    user: 1000:1000
+    command: sh -c "until [ -f .ready ] ; do sleep 1 ; done && yarn start:dev"
+  node-frontend:
+    build:
+      context: docker/services/node
+    volumes:
+      - ./src/frontend:/app
+    networks:
+    - app
+    user: 1000:1000
+    command: sh -c "until [ -f .ready ] ; do sleep 1 ; done && yarn dev"
+    tty: true
+    environment:
+      - WDS_SOCKET_PORT=0
+  node-cli:
+    container_name: node_cli
+    env_file:
+      - config.env
+    build:
+      context: docker/services/node
+    volumes:
+      - ./src:/app
+    networks:
+      - app
+    user: 1000:1000
+    

@@ -1,0 +1,133 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("PRISMA_DATABASE_URL")
+}
+
+enum MediaType {
+  LINK
+  FILE
+}
+
+model PageItem {
+  id          Int       @id @default(autoincrement())
+  alias       String?   @unique
+  title       String    @unique
+  anonce      String?
+  content     String
+  public_at   DateTime  @default(now())
+  created_at  DateTime  @default(now())
+  updated_at  DateTime  @default(now())
+  is_active   Boolean   @default(true)
+  is_deleted  Boolean   @default(false)
+
+  categories  PageRelation[]
+  media       MediaPageItemRealtion[]
+}
+
+model PageCategory {
+  id          Int       @id @default(autoincrement())
+  parent_id   Int       @default(0)
+  alias       String?   @unique
+  title       String    @unique
+  description String?
+  created_at  DateTime  @default(now())
+  updated_at  DateTime  @default(now())
+  is_active   Boolean   @default(true)
+  is_deleted  Boolean   @default(false)
+
+  items       PageRelation[]
+}
+
+model PageRelation {
+  id          Int           @id @default(autoincrement())
+  category_id Int
+  item_id     Int
+  created_at  DateTime      @default(now())
+  updated_at  DateTime      @default(now())
+  category    PageCategory  @relation(fields: [category_id], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  item        PageItem      @relation(fields: [item_id], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  @@unique([category_id, item_id])
+} 
+
+model Media {
+  id          Int       @id @default(autoincrement())
+  type        MediaType
+  path        String    @unique
+  alias       String?
+  size        Int       @default(0)
+  created_at  DateTime  @default(now())
+  updated_at  DateTime  @default(now())
+
+  page_items   MediaPageItemRealtion[]
+  news_items   MediaNewsItemRealtion[]
+}
+
+model MediaPageItemRealtion {
+  id          Int           @id @default(autoincrement())
+  media_id Int
+  item_id     Int
+  created_at  DateTime      @default(now())
+  updated_at  DateTime      @default(now())
+  media       Media  @relation(fields: [media_id], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  item        PageItem      @relation(fields: [item_id], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  @@unique([media_id, item_id])
+}
+
+model NewsItem {
+  id          Int       @id @default(autoincrement())
+  alias       String?   @unique
+  title       String    @unique
+  anonce      String?
+  content     String
+  public_at   DateTime  @default(now())
+  created_at  DateTime  @default(now())
+  updated_at  DateTime  @default(now())
+  is_active   Boolean   @default(true)
+  is_deleted  Boolean   @default(false)
+
+  categories  NewsRelation[]
+  media       MediaNewsItemRealtion[]
+}
+
+model NewsCategory {
+  id          Int       @id @default(autoincrement())
+  parent_id   Int       @default(0)
+  alias       String?   @unique
+  title       String    @unique
+  description String?
+  created_at  DateTime  @default(now())
+  updated_at  DateTime  @default(now())
+  is_active   Boolean   @default(true)
+  is_deleted  Boolean   @default(false)
+
+  items       NewsRelation[]
+}
+
+model NewsRelation {
+  id          Int           @id @default(autoincrement())
+  category_id Int
+  item_id     Int
+  created_at  DateTime      @default(now())
+  updated_at  DateTime      @default(now())
+  category    NewsCategory  @relation(fields: [category_id], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  item        NewsItem      @relation(fields: [item_id], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  @@unique([category_id, item_id])
+} 
+
+model MediaNewsItemRealtion {
+  id          Int           @id @default(autoincrement())
+  media_id Int
+  item_id     Int
+  created_at  DateTime      @default(now())
+  updated_at  DateTime      @default(now())
+  media       Media  @relation(fields: [media_id], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  item        NewsItem      @relation(fields: [item_id], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  @@unique([media_id, item_id])
+}
