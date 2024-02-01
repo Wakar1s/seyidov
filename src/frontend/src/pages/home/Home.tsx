@@ -21,7 +21,7 @@ const Home: React.FC = () => {
         fetchNews();
     }, []);
 
-    const itemsPerPage = 10; // Adjust this based on your preference
+    const itemsPerPage = 10;
     const totalPages = Math.ceil(items.length / itemsPerPage);
 
     const renderNewsItems = () => {
